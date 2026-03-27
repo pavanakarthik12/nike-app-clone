@@ -1,16 +1,60 @@
-# flutter_application_1
+# Sneaker Hub (Nike UI Practice Clone)
 
-A new Flutter project.
+## Disclaimer
+This project is a practice UI clone built for learning Flutter.
 
-## Getting Started
+- This is NOT the official Nike app.
+- This project does NOT represent Nike, Inc.
+- It was created only for personal practice and portfolio/demo purposes.
 
-This project is a starting point for a Flutter application.
+## About
+Sneaker Hub is a Flutter practice app focused on:
 
-A few resources to get you started if this is your first Flutter project:
+- Modern shopping UI design
+- Search and filter interactions
+- Cart flow basics
+- Drawer navigation and multi-page structure
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Features Implemented
+- Intro page
+- Shop page with search, filters, and sorting
+- Add to cart flow
+- Cart page with total and remove item
+- Wishlist page (placeholder)
+- Settings page (placeholder preferences)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Image Placeholders (Replace With Your Screenshots)
+Add your screenshots to `assets/screenshots/` and update these paths.
+
+### App Screens
+![Intro Screen](assets/screenshots/intro-placeholder.png)
+![Shop Screen](assets/screenshots/shop-placeholder.png)
+![Cart Screen](assets/screenshots/cart-placeholder.png)
+![Drawer Screen](assets/screenshots/drawer-placeholder.png)
+![Settings Screen](assets/screenshots/settings-placeholder.png)
+
+### Optional Demo Images
+![Search Demo](assets/screenshots/search-placeholder.png)
+![Filter Demo](assets/screenshots/filter-placeholder.png)
+![Add To Cart Demo](assets/screenshots/add-to-cart-placeholder.png)
+
+## Run Locally
+```bash
+flutter pub get
+flutter run
+```
+
+## Tech Stack
+- Flutter
+- Dart
+- google_fonts
+- google_nav_bar
+
+## Notes
+If you rename or add assets, make sure `pubspec.yaml` includes:
+
+```yaml
+flutter:
+	assets:
+		- assets/
+```
