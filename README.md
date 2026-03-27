@@ -26,17 +26,9 @@ Sneaker Hub is a Flutter practice app focused on:
 ## Image Placeholders (Replace With Your Screenshots)
 Add your screenshots to `assets/screenshots/` and update these paths.
 
-### App Screens
-![Intro Screen](assets/screenshots/intro-placeholder.png)
-![Shop Screen](assets/screenshots/shop-placeholder.png)
-![Cart Screen](assets/screenshots/cart-placeholder.png)
-![Drawer Screen](assets/screenshots/drawer-placeholder.png)
-![Settings Screen](assets/screenshots/settings-placeholder.png)
+### App Demo
+https://github.com/user-attachments/assets/ee41e9c1-cf9c-4b47-93f9-3017a960c798
 
-### Optional Demo Images
-![Search Demo](assets/screenshots/search-placeholder.png)
-![Filter Demo](assets/screenshots/filter-placeholder.png)
-![Add To Cart Demo](assets/screenshots/add-to-cart-placeholder.png)
 
 ## Run Locally
 ```bash
