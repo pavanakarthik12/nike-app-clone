@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/components/bottom_nav_bar.dart';
+import 'package:flutter_application_1/models/sneaker_item.dart';
 import 'package:flutter_application_1/pages/cart_page.dart';
 import 'package:flutter_application_1/pages/shop_page.dart';
 import 'package:flutter_application_1/theme/app_theme.dart';
@@ -14,6 +15,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final List<SneakerItem> _cartItems = [];
+
+  final List<SneakerItem> _catalog = const [
+    SneakerItem(
+      id: 'shoe1',
+      name: 'Air Zoom Nova',
+      subtitle: 'Street Runner',
+      price: 140,
+      imagePath: 'assets/shoe1.jpg',
+    ),
+    SneakerItem(
+      id: 'shoe2',
+      name: 'Retro Blaze',
+      subtitle: 'Court Classic',
+      price: 125,
+      imagePath: 'assets/shoe2.jpg',
+    ),
+    SneakerItem(
+      id: 'shoe3',
+      name: 'Flex Drift',
+      subtitle: 'Daily Comfort',
+      price: 110,
+      imagePath: 'assets/shoe3.jpg',
+    ),
+    SneakerItem(
+      id: 'shoe4',
+      name: 'Phantom Edge',
+      subtitle: 'Performance Fit',
+      price: 160,
+      imagePath: 'assets/shoe4.jpg',
+    ),
+  ];
 
   void navigateBottomBar(int index) {
     setState(() {
@@ -21,7 +54,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Widget> _pages = [const ShopPage(), const CartPage()];
+  void _addToCart(SneakerItem item) {
+    setState(() {
+      _cartItems.add(item);
+    });
+  }
+
+  void _removeFromCart(SneakerItem item) {
+    setState(() {
+      _cartItems.remove(item);
+    });
+  }
 
   void _selectPageFromDrawer(int index) {
     setState(() {
@@ -180,7 +223,17 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: _pages[_selectedIndex],
+      body: _currentPage,
     );
+  }
+
+  Widget get _currentPage {
+    switch (_selectedIndex) {
+      case 1:
+        return CartPage(cartItems: _cartItems, onRemove: _removeFromCart);
+      case 0:
+      default:
+        return ShopPage(catalog: _catalog, onAddToCart: _addToCart);
+    }
   }
 }

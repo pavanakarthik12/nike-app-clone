@@ -1,15 +1,255 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/models/sneaker_item.dart';
+import 'package:flutter_application_1/theme/app_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShopPage extends StatefulWidget {
-  const ShopPage({super.key});
+  final List<SneakerItem> catalog;
+  final ValueChanged<SneakerItem> onAddToCart;
+
+  const ShopPage({super.key, required this.catalog, required this.onAddToCart});
 
   @override
   State<ShopPage> createState() => _ShopPageState();
 }
 
 class _ShopPageState extends State<ShopPage> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<SneakerItem> get _filteredItems {
+    if (_query.trim().isEmpty) {
+      return widget.catalog;
+    }
+    final q = _query.toLowerCase();
+    return widget.catalog.where((item) {
+      return item.name.toLowerCase().contains(q) ||
+          item.subtitle.toLowerCase().contains(q);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("shop"));
+    final filtered = _filteredItems;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Find Your Pair',
+              style: GoogleFonts.oswald(
+                color: AppPalette.textPrimary,
+                fontSize: 34,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.6,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Bold silhouettes, premium details.',
+              style: GoogleFonts.poppins(
+                color: AppPalette.textMuted,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(
+                color: AppPalette.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppPalette.accent.withValues(alpha: 0.25),
+                ),
+              ),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) => setState(() => _query = value),
+                style: GoogleFonts.poppins(color: AppPalette.textPrimary),
+                decoration: InputDecoration(
+                  hintText: 'Search shoes...',
+                  hintStyle: GoogleFonts.poppins(color: AppPalette.textMuted),
+                  border: InputBorder.none,
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    color: AppPalette.accent,
+                  ),
+                  suffixIcon: _query.isEmpty
+                      ? null
+                      : IconButton(
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: AppPalette.textMuted,
+                          ),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _query = '');
+                          },
+                        ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 12,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: filtered.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No sneakers match your search.',
+                        style: GoogleFonts.poppins(color: AppPalette.textMuted),
+                      ),
+                    )
+                  : GridView.builder(
+                      itemCount: filtered.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 0.64,
+                          ),
+                      itemBuilder: (context, index) {
+                        final item = filtered[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppPalette.surface,
+                                AppPalette.background,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: AppPalette.accent.withValues(alpha: 0.22),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(14),
+                                    child: Container(
+                                      color: AppPalette.background,
+                                      child: Image.asset(
+                                        item.imagePath,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        errorBuilder: (_, __, ___) => Container(
+                                          color: AppPalette.surface,
+                                          alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.image_not_supported_rounded,
+                                            color: AppPalette.textMuted,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  item.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    color: AppPalette.textPrimary,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  item.subtitle,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    color: AppPalette.textMuted,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '\$${item.price.toStringAsFixed(0)}',
+                                      style: GoogleFonts.oswald(
+                                        color: AppPalette.accent,
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    SizedBox(
+                                      height: 34,
+                                      child: ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppPalette.accent,
+                                          foregroundColor:
+                                              AppPalette.background,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          widget.onAddToCart(item);
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                '${item.name} added to cart',
+                                              ),
+                                              duration: const Duration(
+                                                milliseconds: 900,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.add_shopping_cart_rounded,
+                                          size: 16,
+                                        ),
+                                        label: Text(
+                                          'Add',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
