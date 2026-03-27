@@ -17,6 +17,10 @@ class _ShopPageState extends State<ShopPage> {
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
 
+  String _normalize(String input) {
+    return input.toLowerCase().trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -24,13 +28,18 @@ class _ShopPageState extends State<ShopPage> {
   }
 
   List<SneakerItem> get _filteredItems {
-    if (_query.trim().isEmpty) {
+    final normalizedQuery = _normalize(_query);
+    if (normalizedQuery.isEmpty) {
       return widget.catalog;
     }
-    final q = _query.toLowerCase();
+
+    final tokens = normalizedQuery.split(' ');
+
     return widget.catalog.where((item) {
-      return item.name.toLowerCase().contains(q) ||
-          item.subtitle.toLowerCase().contains(q);
+      final searchable = _normalize(
+        '${item.name} ${item.subtitle} ${item.price.toStringAsFixed(0)}',
+      );
+      return tokens.every(searchable.contains);
     }).toList();
   }
 
@@ -73,6 +82,7 @@ class _ShopPageState extends State<ShopPage> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (value) => setState(() => _query = value),
+                textInputAction: TextInputAction.search,
                 style: GoogleFonts.poppins(color: AppPalette.textPrimary),
                 decoration: InputDecoration(
                   hintText: 'Search shoes...',
