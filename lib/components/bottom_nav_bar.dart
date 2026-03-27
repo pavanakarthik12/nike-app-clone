@@ -39,7 +39,7 @@ class MybottomNavbar extends StatelessWidget {
           color: AppPalette.background,
         ),
         tabs: const [
-          GButton(icon: Icons.home_rounded, text: "Home", iconSize: 30),
+          GButton(icon: Icons.home_rounded, text: "Shop", iconSize: 30),
           GButton(
             icon: Icons.shopping_cart_rounded,
             text: "Cart",
