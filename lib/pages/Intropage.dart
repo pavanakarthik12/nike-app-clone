@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
+import 'package:flutter_application_1/theme/app_theme.dart';
 
 class Intropage extends StatelessWidget {
   const Intropage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.background,
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/nike.jpg',
-                height: 220,
-              ),
+              Image.asset('assets/nike.jpg', height: 250),
               Column(
                 children: [
                   Text(
@@ -27,7 +25,7 @@ class Intropage extends StatelessWidget {
                     style: GoogleFonts.oswald(
                       fontSize: 36,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      color: AppPalette.textPrimary,
                       letterSpacing: 3,
                     ),
                   ),
@@ -35,9 +33,9 @@ class Intropage extends StatelessWidget {
                   Text(
                     "PREMIUM SNEAKERS",
                     style: GoogleFonts.oswald(
-                      fontSize: 14,
+                      fontSize: 24,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white70,
+                      color: AppPalette.textMuted,
                       letterSpacing: 4,
                     ),
                   ),
@@ -45,16 +43,18 @@ class Intropage extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder:
-                      (context) => HomePage()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: const Color.fromARGB(255, 241, 197, 38),
+                    color: AppPalette.accent,
                   ),
-                  height: 52,
-                  width: 200,
+                  height: 62,
+                  width: 250,
                   child: Center(
                     child: Text(
                       "SHOP NOW",
@@ -73,6 +73,5 @@ class Intropage extends StatelessWidget {
         ),
       ),
     );
-
   }
-} 
+}
