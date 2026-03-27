@@ -24,6 +24,8 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'Street Runner',
       price: 140,
       imagePath: 'assets/shoe1.jpg',
+      category: 'Running',
+      featuredScore: 92,
     ),
     SneakerItem(
       id: 'shoe2',
@@ -31,6 +33,8 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'Court Classic',
       price: 125,
       imagePath: 'assets/shoe2.jpg',
+      category: 'Classic',
+      featuredScore: 88,
     ),
     SneakerItem(
       id: 'shoe3',
@@ -38,6 +42,8 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'Daily Comfort',
       price: 110,
       imagePath: 'assets/shoe3.jpg',
+      category: 'Lifestyle',
+      featuredScore: 85,
     ),
     SneakerItem(
       id: 'shoe4',
@@ -45,6 +51,8 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'Performance Fit',
       price: 160,
       imagePath: 'assets/shoe4.jpg',
+      category: 'Performance',
+      featuredScore: 95,
     ),
   ];
 
@@ -119,6 +127,43 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart_outlined),
+                  onPressed: () => navigateBottomBar(1),
+                ),
+                if (_cartItems.isNotEmpty)
+                  Positioned(
+                    right: 5,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppPalette.accent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${_cartItems.length}',
+                        style: GoogleFonts.poppins(
+                          color: AppPalette.background,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
       drawer: Drawer(
         backgroundColor: AppPalette.surface,

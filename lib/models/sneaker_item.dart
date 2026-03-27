@@ -4,6 +4,8 @@ class SneakerItem {
   final String subtitle;
   final double price;
   final String imagePath;
+  final String category;
+  final int featuredScore;
 
   const SneakerItem({
     required this.id,
@@ -11,5 +13,7 @@ class SneakerItem {
     required this.subtitle,
     required this.price,
     required this.imagePath,
+    required this.category,
+    required this.featuredScore,
   });
 }

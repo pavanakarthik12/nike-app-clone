@@ -16,9 +16,25 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
+  String _selectedCategory = 'All';
+  bool _dealsOnly = false;
+  String _sortBy = 'Featured';
 
   String _normalize(String input) {
     return input.toLowerCase().trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  int _compareItems(SneakerItem a, SneakerItem b) {
+    if (_sortBy == 'Price: Low to High') {
+      return a.price.compareTo(b.price);
+    }
+    if (_sortBy == 'Price: High to Low') {
+      return b.price.compareTo(a.price);
+    }
+    if (_sortBy == 'Name') {
+      return a.name.compareTo(b.name);
+    }
+    return b.featuredScore.compareTo(a.featuredScore);
   }
 
   @override
@@ -29,18 +45,37 @@ class _ShopPageState extends State<ShopPage> {
 
   List<SneakerItem> get _filteredItems {
     final normalizedQuery = _normalize(_query);
-    if (normalizedQuery.isEmpty) {
-      return widget.catalog;
-    }
+    final tokens = normalizedQuery.isEmpty
+        ? <String>[]
+        : normalizedQuery.split(' ');
 
-    final tokens = normalizedQuery.split(' ');
+    final filtered = widget.catalog.where((item) {
+      if (_selectedCategory != 'All' && item.category != _selectedCategory) {
+        return false;
+      }
+      if (_dealsOnly && item.price > 130) {
+        return false;
+      }
 
-    return widget.catalog.where((item) {
+      if (tokens.isEmpty) {
+        return true;
+      }
+
       final searchable = _normalize(
-        '${item.name} ${item.subtitle} ${item.price.toStringAsFixed(0)}',
+        '${item.name} ${item.subtitle} ${item.category} ${item.price.toStringAsFixed(0)}',
       );
-      return tokens.every(searchable.contains);
+      return tokens.every((token) => searchable.contains(token));
     }).toList();
+
+    filtered.sort(_compareItems);
+
+    return filtered;
+  }
+
+  List<String> get _categories {
+    final values = widget.catalog.map((item) => item.category).toSet().toList();
+    values.sort((a, b) => a.compareTo(b));
+    return ['All', ...values];
   }
 
   @override
@@ -112,6 +147,127 @@ class _ShopPageState extends State<ShopPage> {
               ),
             ),
             const SizedBox(height: 16),
+            SizedBox(
+              height: 36,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  final category = _categories[index];
+                  final selected = category == _selectedCategory;
+                  return ChoiceChip(
+                    label: Text(category),
+                    selected: selected,
+                    onSelected: (_) {
+                      setState(() {
+                        _selectedCategory = category;
+                      });
+                    },
+                    labelStyle: GoogleFonts.poppins(
+                      color: selected
+                          ? AppPalette.background
+                          : AppPalette.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                    selectedColor: AppPalette.accent,
+                    backgroundColor: AppPalette.surface,
+                    side: BorderSide(
+                      color: AppPalette.accent.withValues(
+                        alpha: selected ? 0 : 0.3,
+                      ),
+                    ),
+                    showCheckmark: false,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: AppPalette.surface,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _sortBy,
+                        dropdownColor: AppPalette.surface,
+                        iconEnabledColor: AppPalette.accent,
+                        style: GoogleFonts.poppins(
+                          color: AppPalette.textPrimary,
+                          fontSize: 13,
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'Featured',
+                            child: Text('Featured'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Price: Low to High',
+                            child: Text('Price: Low to High'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Price: High to Low',
+                            child: Text('Price: High to Low'),
+                          ),
+                          DropdownMenuItem(value: 'Name', child: Text('Name')),
+                        ],
+                        onChanged: (value) {
+                          if (value == null) return;
+                          setState(() {
+                            _sortBy = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: AppPalette.surface,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Deals',
+                        style: GoogleFonts.poppins(
+                          color: AppPalette.textMuted,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Switch.adaptive(
+                        value: _dealsOnly,
+                        activeColor: AppPalette.accent,
+                        onChanged: (value) {
+                          setState(() {
+                            _dealsOnly = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${filtered.length} result(s)',
+              style: GoogleFonts.poppins(
+                color: AppPalette.textMuted,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
             Expanded(
               child: filtered.isEmpty
                   ? Center(
