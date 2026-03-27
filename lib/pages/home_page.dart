@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/components/bottom_nav_bar.dart';
 import 'package:flutter_application_1/models/sneaker_item.dart';
 import 'package:flutter_application_1/pages/cart_page.dart';
+import 'package:flutter_application_1/pages/settings_page.dart';
 import 'package:flutter_application_1/pages/shop_page.dart';
+import 'package:flutter_application_1/pages/wishlist_page.dart';
 import 'package:flutter_application_1/theme/app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -228,8 +230,9 @@ class _HomePageState extends State<HomePage> {
               title: 'Wishlist',
               onTap: () {
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Wishlist coming soon')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WishlistPage()),
                 );
               },
             ),
@@ -238,8 +241,9 @@ class _HomePageState extends State<HomePage> {
               title: 'Settings',
               onTap: () {
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Settings coming soon')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsPage()),
                 );
               },
             ),
